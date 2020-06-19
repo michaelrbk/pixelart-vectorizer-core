@@ -1,6 +1,4 @@
-using System;
 using Xunit;
-using PixelArtVectorize;
 
 namespace PixelArtVectorize.Tests
 {
@@ -9,8 +7,8 @@ namespace PixelArtVectorize.Tests
         [Fact]
         public void TestVectorize1()
         {
-            PixelArtVectorize pixel = new PixelArtVectorize();
-            // string newImage = pixel.VectorizeImage("c:\\dotnet\\");
+            var pixel = new PixelArtVectorizer();
+            string newImage = pixel.VectorizeImage("c:\\dotnet\\");
             // Assert.True(!newImage.isEmpty());
             Assert.True(true);
         }
