@@ -1,0 +1,13 @@
+C:\dotnet\PixelArtVectorize\pixelart-vectorizer-core\PixelArtVectorize\bin\Debug\netcoreapp3.1\PixelArtVectorize.exe
+C:\dotnet\PixelArtVectorize\pixelart-vectorizer-core\PixelArtVectorize\bin\Debug\netcoreapp3.1\PixelArtVectorize.deps.json
+C:\dotnet\PixelArtVectorize\pixelart-vectorizer-core\PixelArtVectorize\bin\Debug\netcoreapp3.1\PixelArtVectorize.runtimeconfig.json
+C:\dotnet\PixelArtVectorize\pixelart-vectorizer-core\PixelArtVectorize\bin\Debug\netcoreapp3.1\PixelArtVectorize.runtimeconfig.dev.json
+C:\dotnet\PixelArtVectorize\pixelart-vectorizer-core\PixelArtVectorize\bin\Debug\netcoreapp3.1\PixelArtVectorize.dll
+C:\dotnet\PixelArtVectorize\pixelart-vectorizer-core\PixelArtVectorize\bin\Debug\netcoreapp3.1\PixelArtVectorize.pdb
+C:\dotnet\PixelArtVectorize\pixelart-vectorizer-core\PixelArtVectorize\obj\Debug\netcoreapp3.1\PixelArtVectorize.csprojAssemblyReference.cache
+C:\dotnet\PixelArtVectorize\pixelart-vectorizer-core\PixelArtVectorize\obj\Debug\netcoreapp3.1\PixelArtVectorize.AssemblyInfoInputs.cache
+C:\dotnet\PixelArtVectorize\pixelart-vectorizer-core\PixelArtVectorize\obj\Debug\netcoreapp3.1\PixelArtVectorize.AssemblyInfo.cs
+C:\dotnet\PixelArtVectorize\pixelart-vectorizer-core\PixelArtVectorize\obj\Debug\netcoreapp3.1\PixelArtVectorize.csproj.CoreCompileInputs.cache
+C:\dotnet\PixelArtVectorize\pixelart-vectorizer-core\PixelArtVectorize\obj\Debug\netcoreapp3.1\PixelArtVectorize.dll
+C:\dotnet\PixelArtVectorize\pixelart-vectorizer-core\PixelArtVectorize\obj\Debug\netcoreapp3.1\PixelArtVectorize.pdb
+C:\dotnet\PixelArtVectorize\pixelart-vectorizer-core\PixelArtVectorize\obj\Debug\netcoreapp3.1\PixelArtVectorize.genruntimeconfig.cache
