@@ -77,8 +77,11 @@ namespace PixelArtVectorize
                     Pixel p13 = VertexSearch(x + 1, y - 1, g);
                     if (p13 != null && Pixel.colorIsSimilar(p13.color, p.color))
                     {
-                        var e3 = new TaggedUndirectedEdge<Pixel, EdgeTag>(p, p13, new EdgeTag());
-                        g.AddEdge(e3);
+                        if (p <= p13)
+                        {
+                            var e3 = new TaggedUndirectedEdge<Pixel, EdgeTag>(p, p13, new EdgeTag());
+                            g.AddEdge(e3);
+                        }
                         p.valence++;
                         p13.valence++;
                     }
@@ -132,21 +135,30 @@ namespace PixelArtVectorize
                             {
                                 //Se as 4 cores são iguais remove todas as arestas internas
                                 if (edge1 != null)
+                                {
                                     g.RemoveEdge(edge1);
+                                }
+
                                 if (edge2 != null)
+                                {
                                     g.RemoveEdge(edge2);
+                                }
                             }
 
                             //Heuristica da ilha
                             else if (edge1.Source.valence == 1 || edge1.Target.valence == 1)
                             {
                                 if (edge2 != null)
+                                {
                                     g.RemoveEdge(edge2);
+                                }
                             }
                             else if (edge2.Source.valence == 1 || edge2.Target.valence == 1)
                             {
                                 if (edge1 != null)
+                                {
                                     g.RemoveEdge(edge1);
+                                }
                             }
                             else
                             {
@@ -156,12 +168,16 @@ namespace PixelArtVectorize
                                     if (CurveSize(edge1) <= CurveSize(edge2))
                                     {
                                         if (edge1 != null)
+                                        {
                                             g.RemoveEdge(edge1);
+                                        }
                                     }
                                     else
                                     {
                                         if (edge2 != null)
+                                        {
                                             g.RemoveEdge(edge2);
+                                        }
                                     }
                                 }
                                 else
@@ -184,20 +200,28 @@ namespace PixelArtVectorize
                                         {
                                             Pixel pixel = VertexSearch(x, y, g);
                                             if (pixel.color == c1)
+                                            {
                                                 sumC1++;
+                                            }
                                             else
                                                 if (pixel.color == c2)
+                                            {
                                                 sumC2++;
+                                            }
+
                                             ys++;
                                         }
                                         xs++;
                                     }
                                     //A cor em maior quantidade representa o fundo, e deve se manter os detalhes conectados
                                     if (sumC1 > sumC2) //Remove a cor em menor quantidade
+                                    {
                                         g.RemoveEdge(edge1);
+                                    }
                                     else
+                                    {
                                         g.RemoveEdge(edge2);
-
+                                    }
                                 }
                             }
                         }
@@ -264,9 +288,13 @@ namespace PixelArtVectorize
                 }
 
                 if (p1 != null)
+                {
                     lP = p1;
+                }
                 else
+                {
                     lP = fP;
+                }
 
                 //TOP RIGHT
                 /*
@@ -299,12 +327,19 @@ namespace PixelArtVectorize
                 }
 
                 if (lP != null && p2 != null)
+                {
                     AddNewEdge(lP, p2, PixelColorIs(x, y - 1, g), c, ng);
+                }
 
                 if (xP != null)
+                {
                     lP = xP;
+                }
                 else
+                {
                     lP = p2;
+                }
+
                 xP = null;
 
 
@@ -338,12 +373,19 @@ namespace PixelArtVectorize
                 }
 
                 if (lP != null && p3 != null)
+                {
                     AddNewEdge(lP, p3, PixelColorIs(x + 1, y, g), c, ng);
+                }
 
                 if (xP != null)
+                {
                     lP = xP;
+                }
                 else
+                {
                     lP = p3;
+                }
+
                 xP = null;
 
 
@@ -376,16 +418,25 @@ namespace PixelArtVectorize
                 }
 
                 if (lP != null && p4 != null)
+                {
                     AddNewEdge(lP, p4, PixelColorIs(x, y + 1, g), c, ng);
+                }
 
                 if (xP != null)
+                {
                     lP = xP;
+                }
                 else
+                {
                     lP = p4;
+                }
+
                 xP = null;
 
                 if (lP != null && fP != null)
+                {
                     AddNewEdge(lP, fP, PixelColorIs(x - 1, y, g), c, ng);
+                }
             }
             SvgVector svg = new SvgVector();
             svg.Height = Height;
@@ -438,10 +489,14 @@ namespace PixelArtVectorize
                         curveOfEdges.Add(firstEdge);
                         curvesOfEdges.Add(curveOfEdges);
                         if (edge.Tag.colorA != Color.Beige)
+                        {
                             curvesC.Add(new Curve(curveOfEdges, edge.Tag.colorA));
-                        if (edge.Tag.colorB != Color.Beige)
-                            curvesC.Add(new Curve(curveOfEdges, edge.Tag.colorB));
+                        }
 
+                        if (edge.Tag.colorB != Color.Beige)
+                        {
+                            curvesC.Add(new Curve(curveOfEdges, edge.Tag.colorB));
+                        }
                     }
                     else
                     {
@@ -460,9 +515,14 @@ namespace PixelArtVectorize
                     }
 
                     if (firstPoint == null)
+                    {
                         hasEdge = false;
+                    }
                     else
+                    {
                         hasEdge = true;
+                    }
+
                     lastEdge = firstEdge;
 
                     while (hasEdge)//enquanto existirem mais arestas nesta curva adiciona elas
@@ -492,9 +552,14 @@ namespace PixelArtVectorize
                                     curveOfEdges.Add(e);
                                     curvesOfEdges.Add(curveOfEdges);
                                     if (edge.Tag.colorA != Color.Beige)
+                                    {
                                         curvesC.Add(new Curve(curveOfEdges, edge.Tag.colorA));
+                                    }
+
                                     if (edge.Tag.colorB != Color.Beige)
+                                    {
                                         curvesC.Add(new Curve(curveOfEdges, edge.Tag.colorB));
+                                    }
                                 }
                             }
                         }
@@ -544,9 +609,14 @@ namespace PixelArtVectorize
                                     curveOfEdges.Add(e);
                                     curvesOfEdges.Add(curveOfEdges);
                                     if (edge.Tag.colorA != Color.Beige)
+                                    {
                                         curvesC.Add(new Curve(curveOfEdges, edge.Tag.colorA));
+                                    }
+
                                     if (edge.Tag.colorB != Color.Beige)
+                                    {
                                         curvesC.Add(new Curve(curveOfEdges, edge.Tag.colorB));
+                                    }
                                 }
                             }
                         }
@@ -585,7 +655,7 @@ namespace PixelArtVectorize
                 if (!processedCurves.Contains(processingCurve))
                 {
                     processedCurves.Add(processingCurve);
-                    ArrayList curveArray = (ArrayList)processingCurve.curve;
+                    ArrayList curveArray = processingCurve.curve;
 
                     firstPixel = getFirstPixel(curveArray);
                     lastPixel = getLastPixel(curveArray);
@@ -603,7 +673,7 @@ namespace PixelArtVectorize
                                 {
 
                                     hasCurve = false;
-                                    ArrayList newCurveArray = (ArrayList)newCurve.curve;
+                                    ArrayList newCurveArray = newCurve.curve;
                                     TaggedUndirectedEdge<Pixel, EdgeTag> firstNewEdge = (TaggedUndirectedEdge<Pixel, EdgeTag>)newCurveArray[0];
                                     TaggedUndirectedEdge<Pixel, EdgeTag> lastNewEdge = (TaggedUndirectedEdge<Pixel, EdgeTag>)newCurveArray[newCurveArray.Count - 1];
 
@@ -614,20 +684,31 @@ namespace PixelArtVectorize
                                             if (newCurveArray.Count == 1)
                                             {
                                                 if (((TaggedUndirectedEdge<Pixel, EdgeTag>)newCurveArray[0]).Source.Equals(lastPixel))
+                                                {
                                                     lastPixel = ((TaggedUndirectedEdge<Pixel, EdgeTag>)newCurveArray[0]).Target;
+                                                }
                                                 else
+                                                {
                                                     lastPixel = ((TaggedUndirectedEdge<Pixel, EdgeTag>)newCurveArray[0]).Source;
+                                                }
                                             }
-                                            else lastPixel = getLastPixel(newCurveArray);
+                                            else
+                                            {
+                                                lastPixel = getLastPixel(newCurveArray);
+                                            }
                                         }
                                         else
                                         {
                                             if (newCurveArray.Count == 1)
                                             {
                                                 if (((TaggedUndirectedEdge<Pixel, EdgeTag>)newCurveArray[0]).Source.Equals(lastPixel))
+                                                {
                                                     lastPixel = ((TaggedUndirectedEdge<Pixel, EdgeTag>)newCurveArray[0]).Target;
+                                                }
                                                 else
+                                                {
                                                     lastPixel = ((TaggedUndirectedEdge<Pixel, EdgeTag>)newCurveArray[0]).Source;
+                                                }
                                             }
                                             else
                                             {
@@ -678,6 +759,7 @@ namespace PixelArtVectorize
                 foreach (Shape shapeItem2 in shapes)
                 {
                     if (!remove.Contains(shapeItem) && !remove.Contains(shapeItem2) && shapeItem.getColor() != Color.Beige && shapeItem2.getColor() != Color.Beige)
+                    {
                         if (shapeItem.getColor() != shapeItem2.getColor() && shapeItem.isSameShape(shapeItem2))
                         {
                             Color c = new Color();
@@ -704,6 +786,7 @@ namespace PixelArtVectorize
                             }
 
                         }
+                    }
                 }
 
             }
@@ -730,14 +813,20 @@ namespace PixelArtVectorize
         {
             TaggedUndirectedEdge<Pixel, EdgeTag> firstEdge = (TaggedUndirectedEdge<Pixel, EdgeTag>)curve[0];
             if (curve.Count < 2)
+            {
                 return firstEdge.Source;
+            }
             else
             {
                 TaggedUndirectedEdge<Pixel, EdgeTag> secondEdge = (TaggedUndirectedEdge<Pixel, EdgeTag>)curve[1];
                 if (firstEdge.Source.Equals(secondEdge.Target) || firstEdge.Source.Equals(secondEdge.Source))
+                {
                     return firstEdge.Target;
+                }
                 else
+                {
                     return firstEdge.Source;
+                }
             }
         }
 
@@ -745,14 +834,20 @@ namespace PixelArtVectorize
         {
             TaggedUndirectedEdge<Pixel, EdgeTag> lastEdge = (TaggedUndirectedEdge<Pixel, EdgeTag>)curve[curve.Count - 1];
             if (curve.Count < 2)
+            {
                 return lastEdge.Target;
+            }
             else
             {
                 TaggedUndirectedEdge<Pixel, EdgeTag> beforeLastEdge = (TaggedUndirectedEdge<Pixel, EdgeTag>)curve[curve.Count - 2];
                 if (lastEdge.Source.Equals(beforeLastEdge.Target) || lastEdge.Source.Equals(beforeLastEdge.Source))
+                {
                     return lastEdge.Target;
+                }
                 else
+                {
                     return lastEdge.Source;
+                }
             }
         }
 
@@ -814,24 +909,38 @@ namespace PixelArtVectorize
         {
             Pixel p = VertexSearch(x, y, g);
             if (p == null)
+            {
                 return Color.Beige;
+            }
             else
+            {
                 return (p.color);
+            }
         }
 
         private bool HasEdges(int x1, int y1, int x2, int y2, UndirectedGraph<Pixel, TaggedUndirectedEdge<Pixel, EdgeTag>> graph)
         {
             if (x1 > Width - 1 || x2 > Width - 1 || x1 < 0 || x2 < 0)
+            {
                 return false;
+            }
+
             if (y1 > Height - 1 || y2 > Height - 1 || y1 < 0 || y2 < 0)
+            {
                 return false;
+            }
+
             TaggedUndirectedEdge<Pixel, EdgeTag> ed;
             Pixel p1 = VertexSearch(x1, y1, graph);
             Pixel p2 = VertexSearch(x2, y2, graph);
             if (graph.TryGetEdge(p1, p2, out ed))
+            {
                 return graph.TryGetEdge(p1, p2, out ed);
+            }
             else
+            {
                 return graph.TryGetEdge(p2, p1, out ed);
+            }
         }
 
         public static Pixel VertexSearch(int x, int y, UndirectedGraph<Pixel, TaggedUndirectedEdge<Pixel, EdgeTag>> graph)
@@ -876,8 +985,11 @@ namespace PixelArtVectorize
 
             if (e1 == null && e2 == null && b) // adicionado o "b" para adicionar apenas arestas visiveis ao grafo
             {
-                e = new TaggedUndirectedEdge<Pixel, EdgeTag>(p1, p2, new EdgeTag(cA, cB, b));
-                graph.AddEdge(e);
+                if (p1 < p2)
+                {
+                    e = new TaggedUndirectedEdge<Pixel, EdgeTag>(p1, p2, new EdgeTag(cA, cB, b));
+                    graph.AddEdge(e);
+                }
                 if (b) //conta valencia apenas se for visivel
                 {
                     p1.valence++;
@@ -942,7 +1054,9 @@ namespace PixelArtVectorize
                                 lastPoint = ed.Source;
                             }
                             if (i > 0)
+                            {
                                 curveOfPoints.Add(lastPoint);
+                            }
                         }
                     }
                 }

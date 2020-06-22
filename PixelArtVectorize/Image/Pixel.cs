@@ -1,13 +1,12 @@
-﻿using System;
+﻿using PixelArtVectorize.Image;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
-using PixelArtVectorize.Image;
-using System.Collections;
 
-namespace PixelArtVectorize 
+namespace PixelArtVectorize
 {
-    public class Pixel 
+    public class Pixel : IComparable<Pixel>
     {
         public int x { get; set; }
         public int y { get; set; }
@@ -15,12 +14,12 @@ namespace PixelArtVectorize
         public Color color { get; set; }
         public Color colorB { get; set; }
 
-       
+
         public List<Point> points = new List<Point>();
 
         public override string ToString()
         {
-            return Convert.ToString(x)+"-"+Convert.ToString(y);
+            return Convert.ToString(x) + "-" + Convert.ToString(y);
         }
 
         public Pixel(int x1, int y1, Color color1)
@@ -29,7 +28,7 @@ namespace PixelArtVectorize
             y = y1;
             color = color1;
         }
-        
+
         public Point getPoint()
         {
             return new Point(x, y);
@@ -52,9 +51,13 @@ namespace PixelArtVectorize
                 (Math.Abs(yuv1.V - yuv2.V) <= 6))*/
 
             if (c1 == c2)
+            {
                 return true;
+            }
             else
+            {
                 return false;
+            }
         }
 
 
@@ -110,5 +113,54 @@ namespace PixelArtVectorize
             return oddNodes;
         }
 
+
+        public int CompareTo(Pixel other)
+        {
+
+            if (x > other.x)
+            {
+                return -1;
+            }
+            else if (x < other.x)
+            {
+                return 1;
+            }
+            else if (y > other.y)
+            {
+                return -1;
+            }
+            else if (y < other.y)
+            {
+                return 1;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        // Define the is greater than operator.
+        public static bool operator >(Pixel operand1, Pixel operand2)
+        {
+            return operand1.CompareTo(operand2) == 1;
+        }
+
+        // Define the is less than operator.
+        public static bool operator <(Pixel operand1, Pixel operand2)
+        {
+            return operand1.CompareTo(operand2) == -1;
+        }
+
+        // Define the is greater than or equal to operator.
+        public static bool operator >=(Pixel operand1, Pixel operand2)
+        {
+            return operand1.CompareTo(operand2) >= 0;
+        }
+
+        // Define the is less than or equal to operator.
+        public static bool operator <=(Pixel operand1, Pixel operand2)
+        {
+            return operand1.CompareTo(operand2) <= 0;
+        }
     }
 }
