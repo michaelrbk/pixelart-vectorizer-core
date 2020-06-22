@@ -82,6 +82,11 @@ namespace PixelArtVectorize
                             var e3 = new TaggedUndirectedEdge<Pixel, EdgeTag>(p, p13, new EdgeTag());
                             g.AddEdge(e3);
                         }
+                        else
+                        {
+                            var e3 = new TaggedUndirectedEdge<Pixel, EdgeTag>(p13, p, new EdgeTag());
+                            g.AddEdge(e3);
+                        }
                         p.valence++;
                         p13.valence++;
                     }
