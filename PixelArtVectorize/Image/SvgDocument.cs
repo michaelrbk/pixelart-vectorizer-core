@@ -1,28 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml;
-using System.IO;
-using System.Windows;
 using System.Drawing;
+using System.IO;
+using System.Xml;
 
 namespace PixelArtVectorize.Image
 {
     public class SVGDocument
     {
-        XmlWriter m_writer;
-        MemoryStream m_stream;
-        XmlWriterSettings settings = new XmlWriterSettings();
+        readonly XmlWriter m_writer;
+        readonly MemoryStream m_stream;
+        readonly XmlWriterSettings settings = new XmlWriterSettings();
 
         public SVGDocument()
-            :this((double)100, (double)100)
+            : this(100, 100)
         {
         }
 
         public SVGDocument(double width, double height)
         {
-            m_stream = new MemoryStream(); 
+            m_stream = new MemoryStream();
             //m_writer = XmlWriter.Create(m_stream);
             settings.Indent = true;
             settings.IndentChars = "  ";
@@ -54,30 +50,35 @@ namespace PixelArtVectorize.Image
             m_writer.WriteAttributeString("type", "text/css");
             //Estilo das células novas
             if (draw)
+            {
                 m_writer.WriteCData("polygon {stroke:rgb(0, 0, 0);stroke-miterlimit:4;stroke-dasharray:none;stroke-width:0.100}");
+            }
             else
+            {
                 m_writer.WriteCData("polygon {stroke:none;}");
+            }
+
             m_writer.WriteEndElement();
             m_writer.WriteEndElement();
         }
 
-        public void DrawLine(Color color,double strokeThickness, double x1, double y1,double x2,double y2)
+        public void DrawLine(Color color, double strokeThickness, double x1, double y1, double x2, double y2)
         {
             //<line fill="LightBlue" stroke="Blue" stroke-width="1" x1="575px" y1="175px" x2="575px" y2="225px" />
             m_writer.WriteStartElement("line");
             m_writer.WriteAttributeString("stroke", Color2String(color));
-            m_writer.WriteAttributeString("stroke-width", strokeThickness.ToString().Replace(",","."));
+            m_writer.WriteAttributeString("stroke-width", strokeThickness.ToString().Replace(",", "."));
             m_writer.WriteAttributeString("x1", x1.ToString());
             m_writer.WriteAttributeString("y1", y1.ToString());
             m_writer.WriteAttributeString("x2", x2.ToString());
             m_writer.WriteAttributeString("y2", y2.ToString());
-            
+
             m_writer.WriteEndElement();
         }
 
         public void DrawEllipse(Color fillColor, Color strokeColor, double strokeThickness, Point centre, double radiusX, double radiusY)
         {
-            string fillOpacity = ((float)fillColor.A / 255f).ToString();
+            string fillOpacity = (fillColor.A / 255f).ToString();
 
             m_writer.WriteStartElement("ellipse");
             m_writer.WriteAttributeString("cx", centre.X.ToString());
@@ -92,7 +93,7 @@ namespace PixelArtVectorize.Image
         public void DrawCircle(Color fillColor, Color strokeColor, double strokeThickness, double X, double Y, double radius)
         {
             //<circle fill="Blue" cx="525px" cy="25px" r="4px" />
-            
+
             m_writer.WriteStartElement("circle");
             m_writer.WriteAttributeString("fill", Color2String(fillColor));
             m_writer.WriteAttributeString("cx", X.ToString());
@@ -102,7 +103,7 @@ namespace PixelArtVectorize.Image
             m_writer.WriteEndElement();
         }
 
-        public void DrawRectangle(Color fillColor, Color strokeColor, double strokeThickness, double X,double Y, double width, double height)
+        public void DrawRectangle(Color fillColor, Color strokeColor, double strokeThickness, double X, double Y, double width, double height)
         {
             //<rect fill="#FFFFFF" stroke="Black" stroke-width="1px" x="0px" y="0px" width="50px" height="50px" />
             m_writer.WriteStartElement("rect");
@@ -122,7 +123,7 @@ namespace PixelArtVectorize.Image
             m_writer.WriteStartElement("text");
             m_writer.WriteAttributeString("x", origin.X.ToString());
             m_writer.WriteAttributeString("y", origin.Y.ToString());
-            m_writer.WriteAttributeString("style", "font-size:" + emSize.ToString() + ";fill:"+ Color2String(foreground));
+            m_writer.WriteAttributeString("style", "font-size:" + emSize.ToString() + ";fill:" + Color2String(foreground));
             m_writer.WriteString(text);
 
             m_writer.WriteEndElement();
@@ -138,7 +139,7 @@ namespace PixelArtVectorize.Image
             //m_writer.WriteAttributeString("fill", "none");
             m_writer.WriteAttributeString("stroke", Color2String(strokeColor));
             m_writer.WriteAttributeString("stroke-width", strokeThickness.ToString().Replace(",", "."));
-           // m_writer.WriteAttributeString("style", "fill-opacity:" + fillOpacity + ";fill:rgb(0,0,0);stroke:rgb(0,0,0);stroke-width:" + strokeThickness.ToString());
+            // m_writer.WriteAttributeString("style", "fill-opacity:" + fillOpacity + ";fill:rgb(0,0,0);stroke:rgb(0,0,0);stroke-width:" + strokeThickness.ToString());
 
             m_writer.WriteEndElement();
         }
@@ -154,7 +155,7 @@ namespace PixelArtVectorize.Image
             //m_writer.WriteAttributeString("stroke-width", strokeThickness.ToString());
             //m_writer.WriteAttributeString("style", "fill-opacity:" + Color2String(fillColor) + ";fill:" + Color2String(fillColor) + ";stroke:rgb(0,0,0);stroke-width:" + strokeThickness.ToString());
             //m_writer.WriteAttributeString("style", "fill-opacity:" + Color2String(fillColor) + ";fill:" + Color2String(fillColor) + ";stroke:rgb(0, 0, 0);stroke-miterlimit:4;stroke-dasharray:none;stroke-width:0.1");
-            
+
             m_writer.WriteEndElement();
         }
 

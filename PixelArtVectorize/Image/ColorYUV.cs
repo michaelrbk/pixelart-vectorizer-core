@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Drawing;
 
 namespace PixelArtVectorize.Image
@@ -83,19 +80,22 @@ namespace PixelArtVectorize.Image
         public ColorYUV(Color c)
         {
 
-            double r = (double)c.R / 255.0;
-            double g = (double)c.G / 255.0;
-            double b = (double)c.B / 255.0;
+            double r = c.R / 255.0;
+            double g = c.G / 255.0;
+            double b = c.B / 255.0;
 
-            y =( 0.299 * r + 0.587 * g + 0.114 * b) *100;
-            u =( -0.14713 * r - 0.28886 * g + 0.436 * b) *100;
-            v =( 0.615 * r - 0.51499 * g - 0.10001 * b) *100;
+            y = (0.299 * r + 0.587 * g + 0.114 * b) * 100;
+            u = (-0.14713 * r - 0.28886 * g + 0.436 * b) * 100;
+            v = (0.615 * r - 0.51499 * g - 0.10001 * b) * 100;
 
         }
 
         public override bool Equals(Object obj)
         {
-            if (obj == null || GetType() != obj.GetType()) return false;
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
 
             return (this == (ColorYUV)obj);
         }

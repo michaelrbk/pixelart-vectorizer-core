@@ -16,15 +16,14 @@ namespace PixelArtVectorize
         //Height = Altura = Y
         //Width = Largura = X
 
-        UndirectedGraph<Pixel, TaggedUndirectedEdge<Pixel, EdgeTag>> g = new UndirectedGraph<Pixel, TaggedUndirectedEdge<Pixel, EdgeTag>>();
-        UndirectedGraph<Pixel, TaggedUndirectedEdge<Pixel, EdgeTag>> ng = new UndirectedGraph<Pixel, TaggedUndirectedEdge<Pixel, EdgeTag>>();
-        ArrayList curves = new ArrayList();
-        ArrayList curvesC = new ArrayList();
-        ArrayList curvesOfEdges = new ArrayList();
+        readonly UndirectedGraph<Pixel, TaggedUndirectedEdge<Pixel, EdgeTag>> g = new UndirectedGraph<Pixel, TaggedUndirectedEdge<Pixel, EdgeTag>>();
+        readonly UndirectedGraph<Pixel, TaggedUndirectedEdge<Pixel, EdgeTag>> ng = new UndirectedGraph<Pixel, TaggedUndirectedEdge<Pixel, EdgeTag>>();
+        readonly ArrayList curvesC = new ArrayList();
+        readonly ArrayList curvesOfEdges = new ArrayList();
 
         int Height;
         int Width;
-        int scale = 7;
+        readonly int scale = 7;
         /*
          * p11 p12 p13
          * p21  p  p23
@@ -102,11 +101,13 @@ namespace PixelArtVectorize
                 }
             }
 
-            SvgVector svg = new SvgVector();
-            svg.Height = Height;
-            svg.Width = Width;
+            SvgVector svg = new SvgVector
+            {
+                Height = Height,
+                Width = Width
+            };
 
-            return svg.toImageSVG(g, "Graph.svg");
+            return svg.ToImageSVG(g, "Graph.svg");
 
         }
 
@@ -127,10 +128,8 @@ namespace PixelArtVectorize
                     Pixel p01 = VertexSearch(x, y + 1, g);
                     Pixel p11 = VertexSearch(x + 1, y + 1, g);
                     //Console.WriteLine("P= " + x + " " + y + " Valence =" + p00.valence);
-                    TaggedUndirectedEdge<Pixel, EdgeTag> edge1 = null;
-                    TaggedUndirectedEdge<Pixel, EdgeTag> edge2 = null;
-                    g.TryGetEdge(p11, p00, out edge1);
-                    g.TryGetEdge(p01, p10, out edge2);
+                    g.TryGetEdge(p11, p00, out TaggedUndirectedEdge<Pixel, EdgeTag> edge1);
+                    g.TryGetEdge(p01, p10, out TaggedUndirectedEdge<Pixel, EdgeTag> edge2);
                     if (edge1 != null)
                     {
                         if (edge2 != null)
@@ -234,11 +233,13 @@ namespace PixelArtVectorize
 
                 }
             }
-            SvgVector svg = new SvgVector();
-            svg.Height = Height;
-            svg.Width = Width;
+            SvgVector svg = new SvgVector
+            {
+                Height = Height,
+                Width = Width
+            };
             //svg.DrawValence = true;
-            return svg.toImageSVG(g, "AmbiguitiesSolved.svg");
+            return svg.ToImageSVG(g, "AmbiguitiesSolved.svg");
         }
 
         /*
@@ -443,43 +444,47 @@ namespace PixelArtVectorize
                     AddNewEdge(lP, fP, PixelColorIs(x - 1, y, g), c, ng);
                 }
             }
-            SvgVector svg = new SvgVector();
-            svg.Height = Height;
-            svg.Width = Width;
-            svg.scale = scale;
-            svg.DrawNewCells = true;
-            svg.DrawCellBorder = true;
-            svg.DrawPixelArt = false;
-            svg.DrawVertex = false;
-            svg.DrawEdges = false;
+            SvgVector svg = new SvgVector
+            {
+                Height = Height,
+                Width = Width,
+                scale = scale,
+                DrawNewCells = true,
+                DrawCellBorder = true,
+                DrawPixelArt = false,
+                DrawVertex = false,
+                DrawEdges = false
+            };
 
-            return svg.toImageSVG(g, "PixelReshaped.svg");
+            return svg.ToImageSVG(g, "PixelReshaped.svg");
         }
 
         internal String DrawNewGraphEdges()
         {
-            SvgVector svg = new SvgVector();
-            svg.Height = Height * scale;
-            svg.Width = Width * scale;
-            svg.scale = 1;//scale;
+            SvgVector svg = new SvgVector
+            {
+                Height = Height * scale,
+                Width = Width * scale,
+                scale = 1//scale;
+            };
             return svg.ToNewEdges(ng, "NewGraphEdges.svg");
         }
 
 
         internal String CreateNewCurves()
         {
-
-            bool hasEdge = true;
             TaggedUndirectedEdge<Pixel, EdgeTag> firstEdge;
             TaggedUndirectedEdge<Pixel, EdgeTag> lastEdge;
             Pixel lastPoint = null;
-            Pixel firstPoint = null;
+            Pixel firstPoint;
 
+
+            bool hasEdge;
             foreach (var edge in ng.Edges)
             {
                 firstPoint = null;
                 //localiza uma aresta visivel e que seja de valencia diferente de 2, ou seja o inicio de uma curva.
-                if (edge.Tag.visible && (edge.Source.valence != 2 || edge.Target.valence != 2))
+                if (edge.Tag.Visible && (edge.Source.valence != 2 || edge.Target.valence != 2))
                 {
                     //cria um array de pontos para esta curva
                     ArrayList curveOfEdges = new ArrayList();
@@ -489,23 +494,23 @@ namespace PixelArtVectorize
 
                     if (firstEdge.Source.valence != 2 && firstEdge.Target.valence != 2)// curva de apenas dois pontos
                     {
-                        edge.Tag.visible = false;
+                        edge.Tag.Visible = false;
                         firstPoint = null;
                         curveOfEdges.Add(firstEdge);
                         curvesOfEdges.Add(curveOfEdges);
-                        if (edge.Tag.colorA != Color.Beige)
+                        if (edge.Tag.ColorA != Color.Beige)
                         {
-                            curvesC.Add(new Curve(curveOfEdges, edge.Tag.colorA));
+                            curvesC.Add(new Curve(curveOfEdges, edge.Tag.ColorA));
                         }
 
-                        if (edge.Tag.colorB != Color.Beige)
+                        if (edge.Tag.ColorB != Color.Beige)
                         {
-                            curvesC.Add(new Curve(curveOfEdges, edge.Tag.colorB));
+                            curvesC.Add(new Curve(curveOfEdges, edge.Tag.ColorB));
                         }
                     }
                     else
                     {
-                        edge.Tag.visible = false;
+                        edge.Tag.Visible = false;
                         curveOfEdges.Add(firstEdge);
                         if (firstEdge.Target.valence != 2)
                         {
@@ -536,9 +541,9 @@ namespace PixelArtVectorize
                         //Obtem proxima aresta
                         foreach (var e in ng.AdjacentEdges(lastPoint))
                         {
-                            if (e.Tag.visible == true)
+                            if (e.Tag.Visible == true)
                             {
-                                e.Tag.visible = false;
+                                e.Tag.Visible = false;
 
                                 if (e.Target.Equals(lastPoint))
                                 { lastPoint = e.Source; }
@@ -556,14 +561,14 @@ namespace PixelArtVectorize
                                     hasEdge = false;
                                     curveOfEdges.Add(e);
                                     curvesOfEdges.Add(curveOfEdges);
-                                    if (edge.Tag.colorA != Color.Beige)
+                                    if (edge.Tag.ColorA != Color.Beige)
                                     {
-                                        curvesC.Add(new Curve(curveOfEdges, edge.Tag.colorA));
+                                        curvesC.Add(new Curve(curveOfEdges, edge.Tag.ColorA));
                                     }
 
-                                    if (edge.Tag.colorB != Color.Beige)
+                                    if (edge.Tag.ColorB != Color.Beige)
                                     {
-                                        curvesC.Add(new Curve(curveOfEdges, edge.Tag.colorB));
+                                        curvesC.Add(new Curve(curveOfEdges, edge.Tag.ColorB));
                                     }
                                 }
                             }
@@ -579,10 +584,10 @@ namespace PixelArtVectorize
             foreach (var edge in ng.Edges)
             {
                 ArrayList curveOfEdges = new ArrayList();
-                if (edge.Tag.visible)
+                if (edge.Tag.Visible)
                 {
                     firstEdge = edge;
-                    edge.Tag.visible = false;
+                    edge.Tag.Visible = false;
                     curveOfEdges.Add(firstEdge);
                     firstPoint = firstEdge.Source;
                     hasEdge = true;
@@ -594,9 +599,9 @@ namespace PixelArtVectorize
                         //Obtem proxima aresta
                         foreach (var e in ng.AdjacentEdges(lastPoint))
                         {
-                            if (e.Tag.visible == true)
+                            if (e.Tag.Visible == true)
                             {
-                                e.Tag.visible = false;
+                                e.Tag.Visible = false;
 
                                 if (e.Target.Equals(lastPoint))
                                 { lastPoint = e.Source; }
@@ -613,14 +618,14 @@ namespace PixelArtVectorize
                                     hasEdge = false;
                                     curveOfEdges.Add(e);
                                     curvesOfEdges.Add(curveOfEdges);
-                                    if (edge.Tag.colorA != Color.Beige)
+                                    if (edge.Tag.ColorA != Color.Beige)
                                     {
-                                        curvesC.Add(new Curve(curveOfEdges, edge.Tag.colorA));
+                                        curvesC.Add(new Curve(curveOfEdges, edge.Tag.ColorA));
                                     }
 
-                                    if (edge.Tag.colorB != Color.Beige)
+                                    if (edge.Tag.ColorB != Color.Beige)
                                     {
-                                        curvesC.Add(new Curve(curveOfEdges, edge.Tag.colorB));
+                                        curvesC.Add(new Curve(curveOfEdges, edge.Tag.ColorB));
                                     }
                                 }
                             }
@@ -631,11 +636,13 @@ namespace PixelArtVectorize
 
 
 
-            SvgVector svg = new SvgVector();
-            svg.Height = Height * scale;
-            svg.Width = Width * scale;
-            svg.scale = 1;//scale;
-            return svg.ToCurves(curvesOfEdgesToPoints(curvesOfEdges), "NewCurves.svg");
+            SvgVector svg = new SvgVector
+            {
+                Height = Height * scale,
+                Width = Width * scale,
+                scale = 1//scale;
+            };
+            return svg.ToCurves(CurvesOfEdgesToPoints(curvesOfEdges), "NewCurves.svg");
         }
 
 
@@ -648,22 +655,22 @@ namespace PixelArtVectorize
             Shape shape = new Shape();
             ArrayList processedCurves = new ArrayList();
 
-            Pixel lastPixel = null;
-            Pixel firstPixel = null;
+            Pixel lastPixel;
+            Pixel firstPixel;
             Color color;
-            bool hasCurve = true;
+            bool hasCurve;
             foreach (Curve curve in curvesC)
             {
 
                 Curve processingCurve = curve;
-                color = processingCurve.color;
+                color = processingCurve.Color;
                 if (!processedCurves.Contains(processingCurve))
                 {
                     processedCurves.Add(processingCurve);
-                    ArrayList curveArray = processingCurve.curve;
+                    ArrayList curveArray = processingCurve.CurveOfEdges;
 
-                    firstPixel = getFirstPixel(curveArray);
-                    lastPixel = getLastPixel(curveArray);
+                    firstPixel = GetFirstPixel(curveArray);
+                    lastPixel = GetLastPixel(curveArray);
                     shape.Add(curve);
                     if (!firstPixel.Equals(lastPixel)) // se primeiro e ultimo são iguais, então o circuito já esta fechado
                     {
@@ -674,11 +681,11 @@ namespace PixelArtVectorize
                             foreach (Curve newCurve in curvesC) // verifico todas as curvas procurando uma que comece ou termine com o ultimo pixel da pesquisada
                             {
 
-                                if ((newCurve.color == color && newCurve != curve && !processedCurves.Contains(newCurve))) // Precisa ser uma curva não processessada e com cor igual
+                                if ((newCurve.Color == color && newCurve != curve && !processedCurves.Contains(newCurve))) // Precisa ser uma curva não processessada e com cor igual
                                 {
 
                                     hasCurve = false;
-                                    ArrayList newCurveArray = newCurve.curve;
+                                    ArrayList newCurveArray = newCurve.CurveOfEdges;
                                     TaggedUndirectedEdge<Pixel, EdgeTag> firstNewEdge = (TaggedUndirectedEdge<Pixel, EdgeTag>)newCurveArray[0];
                                     TaggedUndirectedEdge<Pixel, EdgeTag> lastNewEdge = (TaggedUndirectedEdge<Pixel, EdgeTag>)newCurveArray[newCurveArray.Count - 1];
 
@@ -699,7 +706,7 @@ namespace PixelArtVectorize
                                             }
                                             else
                                             {
-                                                lastPixel = getLastPixel(newCurveArray);
+                                                lastPixel = GetLastPixel(newCurveArray);
                                             }
                                         }
                                         else
@@ -717,7 +724,7 @@ namespace PixelArtVectorize
                                             }
                                             else
                                             {
-                                                lastPixel = getFirstPixel(newCurveArray);
+                                                lastPixel = GetFirstPixel(newCurveArray);
                                                 newCurveArray.Reverse();
                                             }
                                         }
@@ -763,9 +770,9 @@ namespace PixelArtVectorize
             {
                 foreach (Shape shapeItem2 in shapes)
                 {
-                    if (!remove.Contains(shapeItem) && !remove.Contains(shapeItem2) && shapeItem.getColor() != Color.Beige && shapeItem2.getColor() != Color.Beige)
+                    if (!remove.Contains(shapeItem) && !remove.Contains(shapeItem2) && shapeItem.GetColor() != Color.Beige && shapeItem2.GetColor() != Color.Beige)
                     {
-                        if (shapeItem.getColor() != shapeItem2.getColor() && shapeItem.isSameShape(shapeItem2))
+                        if (shapeItem.GetColor() != shapeItem2.GetColor() && shapeItem.IsSameShape(shapeItem2))
                         {
                             Color c = new Color();
                             //localiza o pixel de cor dentro do poligono
@@ -778,13 +785,13 @@ namespace PixelArtVectorize
                                 }
                             }
 
-                            if (shapeItem.getColor() == c)
+                            if (shapeItem.GetColor() == c)
                             {
                                 remove.Add(shapeItem2);
                                 break;
                             }
                             else
-                            if (shapeItem2.getColor() == c)
+                            if (shapeItem2.GetColor() == c)
                             {
                                 remove.Add(shapeItem);
                                 break;
@@ -806,15 +813,17 @@ namespace PixelArtVectorize
             //Ordena do objeto com maior area para os de menor area
             shapes.Sort();
 
-            SvgVector svg = new SvgVector();
-            svg.Height = Height * scale;
-            svg.Width = Width * scale;
-            svg.scale = 1;
+            SvgVector svg = new SvgVector
+            {
+                Height = Height * scale,
+                Width = Width * scale,
+                scale = 1
+            };
 
             return svg.NewImage(g, shapes, "NewImage.svg");
         }
 
-        private Pixel getFirstPixel(ArrayList curve)
+        private Pixel GetFirstPixel(ArrayList curve)
         {
             TaggedUndirectedEdge<Pixel, EdgeTag> firstEdge = (TaggedUndirectedEdge<Pixel, EdgeTag>)curve[0];
             if (curve.Count < 2)
@@ -835,7 +844,7 @@ namespace PixelArtVectorize
             }
         }
 
-        private Pixel getLastPixel(ArrayList curve)
+        private Pixel GetLastPixel(ArrayList curve)
         {
             TaggedUndirectedEdge<Pixel, EdgeTag> lastEdge = (TaggedUndirectedEdge<Pixel, EdgeTag>)curve[curve.Count - 1];
             if (curve.Count < 2)
@@ -935,16 +944,15 @@ namespace PixelArtVectorize
                 return false;
             }
 
-            TaggedUndirectedEdge<Pixel, EdgeTag> ed;
             Pixel p1 = VertexSearch(x1, y1, graph);
             Pixel p2 = VertexSearch(x2, y2, graph);
-            if (graph.TryGetEdge(p1, p2, out ed))
+            if (graph.TryGetEdge(p1, p2, out _))
             {
-                return graph.TryGetEdge(p1, p2, out ed);
+                return graph.TryGetEdge(p1, p2, out _);
             }
             else
             {
-                return graph.TryGetEdge(p2, p1, out ed);
+                return graph.TryGetEdge(p2, p1, out _);
             }
         }
 
@@ -977,12 +985,10 @@ namespace PixelArtVectorize
         private static void AddNewEdge(Pixel p1, Pixel p2, Color cA, Color cB, UndirectedGraph<Pixel, TaggedUndirectedEdge<Pixel, EdgeTag>> graph)
         {
             TaggedUndirectedEdge<Pixel, EdgeTag> e;
-            TaggedUndirectedEdge<Pixel, EdgeTag> e1;
-            TaggedUndirectedEdge<Pixel, EdgeTag> e2;
             bool b = !cA.Equals(cB);
 
-            graph.TryGetEdge(p1, p2, out e1);
-            graph.TryGetEdge(p2, p1, out e2);
+            graph.TryGetEdge(p1, p2, out TaggedUndirectedEdge<Pixel, EdgeTag> e1);
+            graph.TryGetEdge(p2, p1, out TaggedUndirectedEdge<Pixel, EdgeTag> e2);
             p1.color = cA;
             p1.colorB = cB;
             p2.color = cA;
@@ -1004,12 +1010,12 @@ namespace PixelArtVectorize
 
         }
 
-        public ArrayList curvesOfEdgesToPoints(ArrayList newCurvesOfEdges)
+        public ArrayList CurvesOfEdgesToPoints(ArrayList newCurvesOfEdges)
         {
             ArrayList curvesOfPoints = new ArrayList();
-            ArrayList curveOfPoints = new ArrayList();
-            Pixel lastPoint = null;
-            Pixel firstPoint = null;
+            ArrayList curveOfPoints;
+            Pixel lastPoint;
+            Pixel firstPoint;
             foreach (ArrayList curveOfEdge in newCurvesOfEdges) // array de curvas
             {
                 firstPoint = null;

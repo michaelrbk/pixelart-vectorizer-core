@@ -8,25 +8,25 @@ namespace PixelArtVectorize
     class Curve
     {
 
-        public ArrayList curve { get; set; }
-        public Color color { get; set; }
+        public ArrayList CurveOfEdges { get; set; }
+        public Color Color { get; set; }
 
         public Curve(ArrayList curveOfEdges, Color c)
         {
-            this.curve = curveOfEdges;
-            this.color = c;
+            CurveOfEdges = curveOfEdges;
+            Color = c;
         }
 
         public override string ToString()
         {
-            return curve.ToString();
+            return CurveOfEdges.ToString();
         }
 
-        public double curveSize()
+        public double CurveSize()
         {
-            TaggedUndirectedEdge<Pixel, EdgeTag> edge = null;
+            TaggedUndirectedEdge<Pixel, EdgeTag> edge;
             double lenght = 0;
-            foreach (var e in curve)
+            foreach (var e in CurveOfEdges)
             {
                 edge = (TaggedUndirectedEdge<Pixel, EdgeTag>)e;
                 Point p1 = edge.Source.getPoint();
@@ -37,13 +37,12 @@ namespace PixelArtVectorize
 
         }
 
-        public ArrayList curveToPoints()
+        public ArrayList CurveToPoints()
         {
-            ArrayList curveOfEdge = this.curve;
-            ArrayList curvesOfPoints = new ArrayList();
-            ArrayList curveOfPoints = new ArrayList();
-            Pixel lastPoint = null;
-            Pixel firstPoint = null;
+            ArrayList curveOfEdge = CurveOfEdges;
+            ArrayList curveOfPoints;
+            Pixel lastPoint;
+            Pixel firstPoint;
 
             firstPoint = null;
             lastPoint = null;
@@ -92,7 +91,9 @@ namespace PixelArtVectorize
                             lastPoint = ed.Source;
                         }
                         if (i > 0)
+                        {
                             curveOfPoints.Add(lastPoint);
+                        }
                     }
                 }
             }

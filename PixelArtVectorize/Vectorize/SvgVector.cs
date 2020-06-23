@@ -24,7 +24,7 @@ namespace PixelArtVectorize
         public bool DrawValence = false;
 
 
-        public String toImageSVG(UndirectedGraph<Pixel, TaggedUndirectedEdge<Pixel, EdgeTag>> g, string fileName = "image.svg")
+        public String ToImageSVG(UndirectedGraph<Pixel, TaggedUndirectedEdge<Pixel, EdgeTag>> g, string fileName = "image.svg")
         {
             svg = new SVGDocument(Width * scale + 1, Height * scale + 1);
             //Percorre o Grafo e desenha o pixelart como SVG
@@ -55,10 +55,13 @@ namespace PixelArtVectorize
                     }
                     //Console.WriteLine(points);
                     if (v.color.A != 255) // Se cor é transparente, mostra como branco
+                    {
                         svg.DrawPolygon(Color.White, Color.Black, 0.100, points);
+                    }
                     else
+                    {
                         svg.DrawPolygon(v.color, Color.Black, 0.100, points);
-
+                    }
                 }
 
                 //desenha o nodo
@@ -105,12 +108,14 @@ namespace PixelArtVectorize
             svg = new SVGDocument(Width * scale + 1, Height * scale + 1);
             foreach (var e in g.Edges)
             {
-                if ((e.Tag.visible))
+                if ((e.Tag.Visible))
+                {
                     svg.DrawLine(Color.Black, 0.800,
                         e.Source.x * scale + scale / 2,
                         e.Source.y * scale + scale / 2,
                         e.Target.x * scale + scale / 2,
                         e.Target.y * scale + scale / 2);
+                }
             }
 
             //Retorna o nome do arquivo salvo
@@ -121,7 +126,7 @@ namespace PixelArtVectorize
         internal string ToCurves(System.Collections.ArrayList curves, string fileName = "image.svg")
         {
             svg = new SVGDocument(Width * scale + 1, Height * scale + 1);
-            String data = "";
+            String data;
             for (int i = 0; i < curves.Count; i++)
             {
                 data = "M";
@@ -129,7 +134,7 @@ namespace PixelArtVectorize
                 Pixel pixel = curve[0] as Pixel;
                 data += pixel.x + "," + pixel.y;
                 curve.Add(curve[curve.Count - 1]);
-                data += catmullRom2bezier(curve);
+                data += CatmullRom2bezier(curve);
                 svg.DrawPath(Color.White, Color.Red, 1, data);
             }
 
@@ -141,7 +146,7 @@ namespace PixelArtVectorize
         internal string NewImage(UndirectedGraph<Pixel, TaggedUndirectedEdge<Pixel, EdgeTag>> g, Shapes shapes, string fileName = "image.svg")
         {
             svg = new SVGDocument(Width * scale + 1, Height * scale + 1);
-            String data = "";
+            String data;
             Color color = new Color();
             foreach (Shape shape in shapes)
             {
@@ -150,20 +155,24 @@ namespace PixelArtVectorize
                 for (int i = 0; i < shape.Count; i++)
                 {
 
-                    ArrayList curve = ((Curve)shape[i]).curveToPoints();
+                    ArrayList curve = ((Curve)shape[i]).CurveToPoints();
                     if (i != 0 && !curve[0].Equals(lastPixel)) // Corrige curvas que possa estar no sentido errado
+                    {
                         curve.Reverse();
+                    }
 
                     Pixel pixel = curve[0] as Pixel;
                     lastPixel = curve[curve.Count - 1] as Pixel;
                     if (i == 0)
+                    {
                         data += pixel.x + "," + pixel.y;
+                    }
 
                     curve.Add(curve[curve.Count - 1]);
 
-                    data += catmullRom2bezier(curve) + " ";
+                    data += CatmullRom2bezier(curve) + " ";
 
-                    color = ((Curve)((ArrayList)shape)[0]).color;
+                    color = ((Curve)shape[0]).Color;
 
 
                 }
@@ -187,7 +196,7 @@ namespace PixelArtVectorize
         }
 
 
-        internal String catmullRom2bezier(System.Collections.ArrayList points)
+        internal String CatmullRom2bezier(System.Collections.ArrayList points)
         {
 
             String ret = "";
@@ -230,14 +239,11 @@ namespace PixelArtVectorize
                 Point p2 = (Point)p[2];
                 Point p3 = (Point)p[3];
 
-                bp.Add(new PointD((double)p1.X, (double)p1.Y));
-                bp.Add(new PointD(((-(double)p0.X + (double)6 * (double)p1.X + (double)p2.X) / 6), (-(double)p0.Y + (double)6 * (double)p1.Y + (double)p2.Y) / (double)6));
-                bp.Add(new PointD(((double)p1.X + (double)6 * (double)p2.X - (double)p3.X) / (double)6, ((double)p1.Y + (double)6 * (double)p2.Y - (double)p3.Y) / (double)6));
-                bp.Add(new PointD((double)p2.X, (double)p2.Y));
+                bp.Add(new PointD(p1.X, p1.Y));
+                bp.Add(new PointD(((-p0.X + 6 * (double)p1.X + p2.X) / 6), (-p0.Y + 6 * (double)p1.Y + p2.Y) / 6));
+                bp.Add(new PointD((p1.X + 6 * (double)p2.X - p3.X) / 6, (p1.Y + 6 * (double)p2.Y - p3.Y) / 6));
+                bp.Add(new PointD(p2.X, p2.Y));
 
-                PointD bp1 = (PointD)bp[1];
-                PointD bp2 = (PointD)bp[2];
-                PointD bp3 = (PointD)bp[3];
                 ret += "C" + ((PointD)bp[1]).X.ToString().Replace(",", ".") + "," + ((PointD)bp[1]).Y.ToString().Replace(",", ".") + " " + ((PointD)bp[2]).X.ToString().Replace(",", ".") + "," + ((PointD)bp[2]).Y.ToString().Replace(",", ".") + " " + ((PointD)bp[3]).X.ToString().Replace(",", ".") + "," + ((PointD)bp[3]).Y.ToString().Replace(",", ".") + " ";
             }
 

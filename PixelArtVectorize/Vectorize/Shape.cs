@@ -7,16 +7,16 @@ namespace PixelArtVectorize
     class Shape : ArrayList, IComparable<Shape>
     {
 
-        public Color getColor()
+        public Color GetColor()
         {
-            return ((Curve)this[0]).color;
+            return ((Curve)this[0]).Color;
         }
 
 
         public int CompareTo(Shape otherShape)
         {
-            double sizeShapeA = 0;
-            double sizeShapeB = 0;
+            double sizeShapeA;
+            double sizeShapeB;
             /*
             foreach (Curve curve in this)
             {
@@ -34,29 +34,40 @@ namespace PixelArtVectorize
                 return 1;
             else
                 return 0;*/
-            sizeShapeA = this.PolygonArea();
+            sizeShapeA = PolygonArea();
             sizeShapeB = otherShape.PolygonArea();
             if (sizeShapeA > sizeShapeB)
+            {
                 return -1;
+            }
+
             if (sizeShapeA < sizeShapeB)
+            {
                 return 1;
+            }
             else
+            {
                 return 0;
+            }
         }
 
-        public bool isSameShape(Shape otherShape)
+        public bool IsSameShape(Shape otherShape)
         {
-            if (this.Count != otherShape.Count)
+            if (Count != otherShape.Count)
+            {
                 return false;
+            }
 
-            Curve curve = null;
-            Curve otherCurve = null;
-            for (int i = 0; i < this.Count; i++)
+            Curve curve;
+            Curve otherCurve;
+            for (int i = 0; i < Count; i++)
             {
                 curve = ((Curve)this[i]);
                 otherCurve = ((Curve)otherShape[i]);
-                if (curve.curve != otherCurve.curve)
+                if (curve.CurveOfEdges != otherCurve.CurveOfEdges)
+                {
                     return false;
+                }
             }
 
             return true;
@@ -65,15 +76,17 @@ namespace PixelArtVectorize
         public ArrayList ToPoints()
         {
             ArrayList shapeOfPoints = new ArrayList();
-            ArrayList points = new ArrayList();
+            ArrayList points;
             Pixel lastPoint = null;
 
-            for (int i = 0; i < this.Count; i++)
+            for (int i = 0; i < Count; i++)
             {
 
-                points = ((Curve)this[i]).curveToPoints();
+                points = ((Curve)this[i]).CurveToPoints();
                 if (i != 0 && !points[0].Equals(lastPoint)) // Corrige curvas que possa estar no sentido errado
+                {
                     points.Reverse();
+                }
 
                 lastPoint = (Pixel)points[points.Count - 1];
                 shapeOfPoints.AddRange(points);
@@ -96,7 +109,7 @@ namespace PixelArtVectorize
 
         double PolygonArea()
         {
-            ArrayList points = new ArrayList(this.ToPoints());
+            ArrayList points = new ArrayList(ToPoints());
             int i, j = points.Count - 1;
 
             double area = 0;

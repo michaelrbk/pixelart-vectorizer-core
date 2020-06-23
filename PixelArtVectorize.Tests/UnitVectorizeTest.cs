@@ -1,6 +1,5 @@
 using Xunit;
 using Xunit.Abstractions;
-using System.IO;
 namespace PixelArtVectorize.Tests
 {
     public class UnitVectorizeTest
